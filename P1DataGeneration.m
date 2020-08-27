@@ -1,7 +1,7 @@
 %[1-1]
 % generate random binary digits (0 or 1) 
 noOfBits = 1024;
-inputData = randi([0, 1], [1, NoOfBits]);
+inputData = randi([0, 1], [1, noOfBits]);
 %inputData % test data generated
 
 %[1-2]
