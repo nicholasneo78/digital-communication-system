@@ -18,4 +18,3 @@ varianceNoise = 1; % unit variance
 noise = sqrt(varianceNoise)*randn(1,noOfBits) + meanNoise;
 %noise % look at the noise values generated with mean=0 and variance=1
 
-% test
