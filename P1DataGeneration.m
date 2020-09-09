@@ -20,11 +20,7 @@ arrayIndex = 1;
 for i = SNR
     noOfErrors = 0;
     N=S./(10.^(i./10));
-    %noise = wgn(1,1024,sqrt(N));
-    %outputSignal = awgn(inputData,i,N,(randn(1024,1)*sqrt(1)));
-    %calculate = sum(noise);
-    %calculate
-    %outputSignal = noise+inputData;
+    outputSignal = awgn(inputData,i,N);
     threshold = 0;
     outputSignal(outputSignal>=0) = 1;
     outputSignal(outputSignal<0) = 0;
