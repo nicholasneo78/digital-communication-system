@@ -59,6 +59,6 @@ end
 %Plot the results
 semilogy(SNRvalues, bitErrorRate);
 axis([0 50 -1 1])
-title("Plot of Bit Error Rate vs Signal to Noise Ratio");
-xlabel('E_{b}/N_{0}') ;
-ylabel('P_{e}') ;
+title("Bit Error Rate (Y-axis) against SNR values (X-axis)");
+xlabel('SNR Values');
+ylabel('Bit Error Rate');
