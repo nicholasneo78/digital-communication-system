@@ -17,13 +17,9 @@ SNR = 0:5:50; %Loop from 0 to 50 (in multiples of 5)
 S=1; 
 
 %[1-16]
-bitErrorRate = zeros(1,11); 
-SNRvalues = zeros(1,11); 
-arrayIndex = 1; 
-
-%bitErrorRate = zeros(1,11); %Initialise an array of 1-by-11 zeros to store error rate
-%SNRvalues = zeros(1,11); %Initialise an array of 1-by-11 zeros to store SNR values
-%arrayIndex = 1; %To count the array index for storage
+bitErrorRate = zeros(1,11); %Initialise an array of 1-by-11 zeros to store error rate
+SNRvalues = zeros(1,11); %Initialise an array of 1-by-11 zeros to store SNR values
+arrayIndex = 1; %To count the array index for storage
 
 for i = SNR %Loop from 0 to 50 (in multiples of 5)
     %[1-11]
@@ -54,13 +50,9 @@ for i = SNR %Loop from 0 to 50 (in multiples of 5)
         end
     end
     %[1-16]
-    SNRvalues(arrayIndex)=i;
-    bitErrorRate(arrayIndex)= noOfErrors/noOfBits; 
+    SNRvalues(arrayIndex)=i; %Store current SNR value into array
+    bitErrorRate(arrayIndex)= noOfErrors/noOfBits; %Store the bitErrorRate into array
     arrayIndex=arrayIndex+1;
-    
-    %SNRvalues(arrayIndex)=i; %Store current SNR value into array
-    %bitErrorRate(arrayIndex)= noOfErrors/noOfBits; %Store the bitErrorRate into array
-    %arrayIndex=arrayIndex+1;
 end
 
 %[1-15]
