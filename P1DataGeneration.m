@@ -29,7 +29,7 @@ for i = SNR %Loop from 0 to 50 (in multiples of 5)
     N=S./(10.^(i./10)); %Obtain noise variance (10log10 = S/N)
     
     %[1-3 && 1-7]
-    %AWGN function applys White Gaussian Noise to inputData
+    %AWGN function applies White Gaussian Noise to inputData
     outputSignal = awgn(inputData,i,N); %i=SNR, N=noise variance
     
     %[1-8]
