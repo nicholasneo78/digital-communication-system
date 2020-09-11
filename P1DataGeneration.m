@@ -54,9 +54,13 @@ for i = SNR %Loop from 0 to 50 (in multiples of 5)
         end
     end
     %[1-16]
-    SNRvalues(arrayIndex)=i; %Store current SNR value into array
-    bitErrorRate(arrayIndex)= noOfErrors/noOfBits; %Store the bitErrorRate into array
+    SNRvalues(arrayIndex)=i;
+    bitErrorRate(arrayIndex)= noOfErrors/noOfBits; 
     arrayIndex=arrayIndex+1;
+    
+    %SNRvalues(arrayIndex)=i; %Store current SNR value into array
+    %bitErrorRate(arrayIndex)= noOfErrors/noOfBits; %Store the bitErrorRate into array
+    %arrayIndex=arrayIndex+1;
 end
 
 %[1-15]
