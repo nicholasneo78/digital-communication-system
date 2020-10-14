@@ -2,14 +2,20 @@
 Fc = 10000; 
 %Given 16 times over-sampled Fs = Fc * 16
 Fs = Fc * 16;
-%carrier
-carrier = cos(2 * pi * Fc * time);
 %Data rate 1kpbs
 dataRate = 1000;
 %Signal length
-nOfBits = 1024;
+noOfBits = 1024;
+%sampling time
+sampStart = 1/(2 * Fs);
+sampInterval = 1/Fs;
+timeTaken = noOfBits/dataRate;
+time = sampStart: sampInterval: timeTaken;
+%carrier
+carrier = cos(2 * pi * Fc * time);
+
 %input
-inputData = randi([0, 1], [1, noOfBits]);
+input = randi([0, 1], [1, noOfBits]);
 %Simulation for different SNR values
 SNR = 0:5:50; %Loop from 0 to 50 (in multiples of 5)
 
@@ -19,11 +25,7 @@ amplitude = 1;
 %low pass butter filter, 6th order filter with cut-off freq 0.2
 [b, a] = butter(6, 0.2);
 
-%sampling time
-sampStart = 1/(2 * Fs);
-sampInterval = 1/Fs;
-timeTaken = numOfBits/dataRate;
-time = sampStart: sampInterval: timeTaken;
+
 
 %sampling rate is larger than data rate
 %need to extend 1s and 0s by the ratio of the sampling rate and the data
@@ -75,10 +77,17 @@ xlim([0 50]);
 hold on
 
 hold on
+S=1;
 SNRvalues = zeros(1,11);
 bitErrorRateOutput = zeros(1,11);
 counter=1;
 AverageBPSKError = zeros(1,11);
+
+%test
+% inputData = randi([0, 1], [1, 2048]);
+% ratio_fs_dataRate = Fs/dataRate;
+% extension = ones(1, ratio_fs_dataRate);
+% sampled_input = kron(inputData, extension);
 
 %extended sampled input multipled with carrier signal
 sampled_input_bpsk = 2 * sampled_input - 1;
@@ -99,11 +108,7 @@ for i=SNR
     threshold = 0; 
     outputSignal(outputSignal>=threshold) = 1;
     outputSignal(outputSignal<threshold) = 0;
-    
-    
-    
-
-
+end
 for runs = 1:20
     bitErrorRateOutput = zeros(1,11);
     counter=1;
