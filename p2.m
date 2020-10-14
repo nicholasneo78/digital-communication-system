@@ -85,7 +85,20 @@ sampled_input_bpsk = 2 * sampled_input - 1;
 sampled_bpsk = sampled_input_bpsk .* carrier;
 arrayIndex = 1; %To count the array index for storage
 
-
+for i=SNR
+    noOfErrors = 0; %Count number of errors for each SNR
+    
+    N=S./(10.^(i./10)); %Obtain noise variance (10log10 = S/N)
+    
+    %AWGN function applies White Gaussian Noise to inputData
+    outputSignal = awgn(sampled_bpsk,i,N); %i=SNR, N=noise variance
+    
+    %Convert outputSignal to 0/1
+    %(outputSignal >= 0) -> 1
+    %(outputSignal < 0) -> 0
+    threshold = 0; 
+    outputSignal(outputSignal>=threshold) = 1;
+    outputSignal(outputSignal<threshold) = 0;
     
     
     
