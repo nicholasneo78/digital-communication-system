@@ -27,7 +27,7 @@ input = randi([0, 1], [1, 1024]);
 %need to extend 1s and 0s by the ratio of the sampling rate and the data
 %rate
 extension_vector = ones(1, Fs/dataRate);
-sampled_input = encode(input, 7, 4, 'hamming/fmt');
+sampled_input = encode(input, 7, 4, 'hamming/binary');
 sampled_input = kron(sampled_input, extension_vector);
 
 sampled_ook = sampled_input .* carrier;
@@ -53,7 +53,7 @@ for SNR = 0:5:50
             decoded_signal(i) = 0;        
         end
     end
-    decoded_signal = decode(decoded_signal,7,4,'hamming/fmt');
+    decoded_signal = decode(decoded_signal,7,4,'hamming/binary');
     bitErrorRate = calculate_error_rate(decoded_signal, input);
     bitErrorRateOutput(counter)=bitErrorRate;
     counter = counter +1;
