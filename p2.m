@@ -48,13 +48,6 @@ AverageOOKError = zeros(1,11);
 S=1;
 error = 0;
 
-%%%%%%%%%%%%%%%%%%%%
-%declare number of runs
-numOfRuns = 11;
-% declare array to store the error count of the 20 runs
-errorCountArray = zeros(1, numOfRuns);
-%%%%%%%%%%%%%%%%%%%
-
 for j = 1:numOfRuns
     bitErrorRateOutput = zeros(1,11);
     arrayIndex=1;
@@ -78,26 +71,11 @@ for j = 1:numOfRuns
             else
                 decoded_signal(count) = 0;        
             end
-            
-            %think about how to put the error count into here from p1
-            %instead of calling the function
-             threshold = 0.5; 
-            decoded_signal(decoded_signal>=threshold) = 1;
-            decoded_signal(decoded_signal<threshold) = 0;
-            
-            
-            if (input(count) > threshold && decoded_signal(count) == 0) || (input(count) <= threshold && decoded_signal(count) == 1)
-                noOfErrors = noOfErrors + 1;
-                %test = test +1;
-            end
-            
-            
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+          
         end
-        errorCountArray(j) = noOfErrors;
         
         SNRvalues(arrayIndex)=i; %Store current SNR value into array
-        %bitErrorRate = calculate_error_rate(decoded_signal, input);
+        bitErrorRate = calculate_error_rate(decoded_signal, input);
         bitErrorRateOutput(arrayIndex)= bitErrorRate;
         AverageOOKError(arrayIndex) = AverageOOKError(arrayIndex) + bitErrorRateOutput(arrayIndex);
         
@@ -105,10 +83,8 @@ for j = 1:numOfRuns
     end
 end
 
-%AverageOOKError = AverageOOKError ./ 10;
-errorCountArray = errorCountArray./10;
-semilogy(SNRvalues, errorCountArray);
-%semilogy(SNRvalues, AverageOOKError);
+AverageOOKError = AverageOOKError ./ 10;
+semilogy(SNRvalues, AverageOOKError);
 ylim([10^(-5) 10^1]);
 xlim([0 50]);
 hold on
