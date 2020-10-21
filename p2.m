@@ -48,43 +48,42 @@ AverageOOKError = zeros(1,11);
 S=1;
 error = 0;
 
-for runs = 1:20
+for j = 1:numOfRuns
     bitErrorRateOutput = zeros(1,11);
     arrayIndex=1;
+    noOfErrors = 0;
     for i = SNR
         SNRvalues(arrayIndex) = i;
         
         N=S./(10.^(i./10)); %Obtain noise variance (10log10 = S/N)
         outputSignal = awgn(sampled_ook,i,N); %i=SNR, N=noise variance
         
-        demodulated_signal = outputSignal .* (2 * carrier);
+        demod_signal = outputSignal .* (2 * carrier);
         
-        filtered_signal = filtfilt(b, a, demodulated_signal);
+        filter_signal = filtfilt(b, a, demod_signal);
         
         decoded_signal = zeros(1,1024);
         
         for count=1:noOfBits
-            produced_signal = filtered_signal(1 /2 * Fs/dataRate + (count - 1) * Fs/dataRate);
+            produced_signal = filter_signal(1 /2 * Fs/dataRate + (count - 1) * Fs/dataRate);
             if (produced_signal > 0.5)
                 decoded_signal(count) = 1;
             else
                 decoded_signal(count) = 0;        
             end
-            
-            %think about how to put the error count into here from p1
-            %instead of calling the function
+          
         end
         
         SNRvalues(arrayIndex)=i; %Store current SNR value into array
         bitErrorRate = calculate_error_rate(decoded_signal, input);
         bitErrorRateOutput(arrayIndex)= bitErrorRate;
         AverageOOKError(arrayIndex) = AverageOOKError(arrayIndex) + bitErrorRateOutput(arrayIndex);
+        
         arrayIndex = arrayIndex + 1;
     end
 end
 
-AverageOOKError = AverageOOKError ./ 20;
-
+AverageOOKError = AverageOOKError ./ 10;
 semilogy(SNRvalues, AverageOOKError);
 ylim([10^(-5) 10^1]);
 xlim([0 50]);
@@ -94,20 +93,14 @@ hold on
 S=1;
 SNRvalues = zeros(1,11);
 bitErrorRateOutput = zeros(1,11);
-counter=1;
+arrayIndex=1;
 AverageBPSKError = zeros(1,11);
-
-%test
-% inputData = randi([0, 1], [1, 2048]);
-% ratio_fs_dataRate = Fs/dataRate;
-% extension = ones(1, ratio_fs_dataRate);
-% sampled_input = kron(inputData, extension);
 
 %extended sampled input multipled with carrier signal
 sampled_input_bpsk = 2 * sampled_input - 1;
 sampled_bpsk = sampled_input_bpsk .* carrier;
 
-for runs = 1:20
+for runs = 1:10
     bitErrorRateOutput = zeros(1,11);
     arrayIndex=1;
     for i = SNR
@@ -116,14 +109,14 @@ for runs = 1:20
         N=S./(10.^(i./10)); %Obtain noise variance (10log10 = S/N)
         outputSignal = awgn(sampled_bpsk,i,N); %i=SNR, N=noise variance
 
-        demodulated_signal = outputSignal .* (2 * carrier);
+        demod_signal = outputSignal .* (2 * carrier);
         
-        filtered_signal = filtfilt(b, a, demodulated_signal);
+        filter_signal = filtfilt(b, a, demod_signal);
         
         decoded_signal = zeros(1,1024);
         
         for count=1:noOfBits
-            produced_signal = filtered_signal(1 /2 * Fs/dataRate + (count - 1) * Fs/dataRate);
+            produced_signal = filter_signal(1 /2 * Fs/dataRate + (count - 1) * Fs/dataRate);
             if produced_signal > 0
                 decoded_signal(count) = 1;
             else
@@ -138,7 +131,7 @@ for runs = 1:20
         arrayIndex = arrayIndex +1;
     end
 end
-AverageBPSKError = AverageBPSKError ./ 20;
+AverageBPSKError = AverageBPSKError ./ 10;
 semilogy(SNRvalues, AverageBPSKError);
 axis([0 50 -1 1]);
 ylabel('Log 10 Bit Error Rate') ;
@@ -149,13 +142,13 @@ xlabel('E_{b}/N_{0}') ;
 ylabel('P_{e}') ;
 
 function bitErrorRate = calculate_error_rate(input, tempInput)
-    %Generate noise having normal distribution with zero mean
+    %Generate noise, normal distribution, zero mean
     error = 0;
-    numOfBits= 1024;
-    for i = 1:1:numOfBits
+    noOfBits= 1024;
+    for i = 1:1:noOfBits
         if input(i) ~= tempInput(i)
             error = error + 1;
         end
     end
-    bitErrorRate = error/numOfBits;
+    bitErrorRate = error/noOfBits;
 end
