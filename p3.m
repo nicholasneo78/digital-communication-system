@@ -33,8 +33,6 @@ amplitude = 1;
 %low pass butter filter, 6th order filter with cut-off freq 0.2
 [b, a] = butter(6, 0.2);
 
-
-
 %sampling rate is larger than data rate
 %need to extend 1s and 0s by the ratio of the sampling rate and the data
 %rate
@@ -98,7 +96,7 @@ semilogy(SNRvalues, AverageBPSKError);
 axis([0 50 -1 1]);
 ylabel('Log 10 Bit Error Rate') ;
 hold on
-title('Plot of Bit Error vs SNR for BPSK with Channnel Coding');
+title('Plot of Bit Error vs SNR for BPSK with Channel Coding');
 legend({'y= AverageBPSK'},'Location','southeast')
 xlabel('E_{b}/N_{0}') ;
 ylabel('P_{e}') ;
