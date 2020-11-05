@@ -1,52 +1,36 @@
-%Define carrier frequency in Hz
+clear all; close all; clc;
+
 Fc = 10000; 
-
-%Given 16 times over-sampled Fs = Fc * 16
 Fs = Fc * 16;
-
-%Data rate 1kpbs
 dataRate = 1000;
-
-%Signal length
 noOfBits = 1024;
+amplitude = 1;
 
-%sampling time
 sampStart = 1/(2 * Fs);
 sampInterval = 1/Fs;
 timeTaken = noOfBits/dataRate;
 time = sampStart: sampInterval: timeTaken;
 
-%carrier
-carrier = cos(2 * pi * Fc * time);
+carrier = amplitude .* cos(2 * pi * Fc * time);
 
-%input
 input = randi([0, 1], [1, noOfBits]);
 %Simulation for different SNR values
 SNR = 0:5:50; %Loop from 0 to 50 (in multiples of 5)
 
-%Define amp
-amplitude = 1;
-
-%low pass butter filter, 6th order filter with cut-off freq 0.2
 [b, a] = butter(6, 0.2);
 
-
-
-%sampling rate is larger than data rate
-%need to extend 1s and 0s by the ratio of the sampling rate and the data
-%rate
 ratio_fs_dataRate = Fs/dataRate;
 extension = ones(1, ratio_fs_dataRate);
 sampled_input = kron(input, extension);
 
-%extended sampled input multipled with carrier signal
 sampled_ook = sampled_input .* carrier;
 
-SNRvalues = zeros(1,11); %Initialise an array of 1-by-11 zeros to store SNR values
+SNRvalues = zeros(1,11); 
 AverageOOKError = zeros(1,11);
 
 S=1;
 error = 0;
+numOfRuns = 20;
 
 for j = 1:numOfRuns
     bitErrorRateOutput = zeros(1,11);
@@ -83,24 +67,22 @@ for j = 1:numOfRuns
     end
 end
 
-AverageOOKError = AverageOOKError ./ 10;
-semilogy(SNRvalues, AverageOOKError);
+AverageOOKError = AverageOOKError ./ numOfRuns;
+semilogy(SNRvalues, AverageOOKError, 'k-*');
 ylim([10^(-5) 10^1]);
 xlim([0 50]);
 hold on
 
-hold on
 S=1;
 SNRvalues = zeros(1,11);
 bitErrorRateOutput = zeros(1,11);
 arrayIndex=1;
 AverageBPSKError = zeros(1,11);
 
-%extended sampled input multipled with carrier signal
 sampled_input_bpsk = 2 * sampled_input - 1;
 sampled_bpsk = sampled_input_bpsk .* carrier;
 
-for runs = 1:10
+for runs = 1:numOfRuns
     bitErrorRateOutput = zeros(1,11);
     arrayIndex=1;
     for i = SNR
@@ -131,18 +113,17 @@ for runs = 1:10
         arrayIndex = arrayIndex +1;
     end
 end
-AverageBPSKError = AverageBPSKError ./ 10;
-semilogy(SNRvalues, AverageBPSKError);
+AverageBPSKError = AverageBPSKError ./ numOfRuns;
+semilogy(SNRvalues, AverageBPSKError, 'c-*');
 axis([0 50 -1 1]);
 ylabel('Log 10 Bit Error Rate') ;
 hold on
-title('Plot of Bit Error vs SNR for OOK and BPSK');
-legend({'y = AverageOOK','y= AverageBPSK'},'Location','southeast')
+title('Bit Error vs SNR - OOK and BPSK');
+legend({'y = AverageOOK','y= AverageBPSK'},'Location','northeast')
 xlabel('E_{b}/N_{0}') ;
 ylabel('P_{e}') ;
 
 function bitErrorRate = calculate_error_rate(input, tempInput)
-    %Generate noise, normal distribution, zero mean
     error = 0;
     noOfBits= 1024;
     for i = 1:1:noOfBits
